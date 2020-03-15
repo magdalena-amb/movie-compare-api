@@ -1,3 +1,5 @@
+import { debounce } from './utils.js';
+
 const fetchData = async (searchTerm) => {
     const response = await axios.get('http://www.omdbapi.com/', {
         params: {
@@ -5,25 +7,16 @@ const fetchData = async (searchTerm) => {
             s: searchTerm
         }
     });
-    console.log(response.data);
+    return response.data.Search;
 }
 
 const input = document.querySelector('input');
 
-const debounce =(func, delay = 1000) => {
-    let timeoutId;
-    return (...args) => {
-        if(timeoutId) {
-            clearTimeout(timeoutId);
-        }
-        timeoutId = setTimeout(()=> {
-            func.apply(null, args);
-        }, delay);
-    } 
-}
 
-const onInput = e => {
-    fetchData(e.target.value);
+
+const onInput = async e => {
+    const movies = await fetchData(e.target.value);
+    console.log(movies);
 }
 
 input.addEventListener('input', debounce(onInput, 1500) );
